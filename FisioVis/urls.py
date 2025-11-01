@@ -16,11 +16,13 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from FisioVis.views import LandingView
 
 urlpatterns = [
     path("", LandingView.as_view(), name="landing"),
+    # path("login", LoginView.as_view(), name="login"),
     path("admin/", admin.site.urls),
+    path("users/", include('users.urls'))
 ]

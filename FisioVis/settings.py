@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "users",
     "crispy_forms",
     "crispy_tailwind",
+    "patients",
+    "assessments",
 ]
 
 MIDDLEWARE = [
@@ -81,8 +83,12 @@ WSGI_APPLICATION = "FisioVis.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "PORT": "5434",
+        "USER": "postgres",
+        "HOST": "localhost",
+        "PASSWORD": "lopera",
     }
 }
 
@@ -127,3 +133,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+LOGIN_REDIRECT_URL = "patient_list"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "/users/login"

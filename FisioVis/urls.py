@@ -24,5 +24,6 @@ urlpatterns = [
     path("", LandingView.as_view(), name="landing"),
     # path("login", LoginView.as_view(), name="login"),
     path("admin/", admin.site.urls),
-    path("users/", include('users.urls'))
+    path("users/", include("users.urls")),
+    path("patients/", include("patients.urls")),
 ]

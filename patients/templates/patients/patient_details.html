@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% load tailwind_filters %} {% block content %}
+<div class="flow-root">
+  <dl class="-my-3 divide-y divide-gray-200 text-sm *:even:bg-gray-50">
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Nombre</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.full_name}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Edad</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.age}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Sexo</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.sex}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Teléfono</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.phone}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Correo Electrónico</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.email}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Trabajo</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.work}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Historial Médico</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.medical_history}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Cirugías</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.surgeries}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Patologías</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.pathologies}}</dd>
+    </div>
+
+    <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+      <dt class="font-medium text-gray-900">Medicamentos</dt>
+
+      <dd class="text-gray-700 sm:col-span-2">{{patient.medications}}</dd>
+    </div>
+
+    <div class='flex items-center justify-center mb-8 py-6'>
+        <a
+          href="{% url 'patient_list' %}"
+          class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
+        >
+          Volver
+        </a>
+    </div>
+  </dl>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Editar Paciente</h2>
+
+  <form method="POST" class="space-y-4">
+    {% csrf_token %}
+    
+    <div class="space-y-4">
+      {{ form|crispy }}
+    </div>
+
+    <div class='flex items-center justify-center mb-8 py-6'>
+      <button
+        type="submit"
+        class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700">
+        Actualizar
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

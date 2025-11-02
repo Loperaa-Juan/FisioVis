@@ -11,10 +11,10 @@ class Patient(models.Model):
     full_name = models.TextField(max_length=100, verbose_name="Nombre Completo")
     age = models.IntegerField()
     sex = models.CharField(
-        max_length=10, choices=[("M", "Masculino"), ("F", "Femenino")], null=True
+        max_length=10, choices=[("M", "Masculino"), ("F", "Femenino")], verbose_name="sexo"
     )
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Teléfono")
+    email = models.EmailField(null=True, blank=True, verbose_name="Email")
     work = models.TextField(max_length=200, verbose_name="Trabajo")
     medical_history = models.TextField(max_length=500, verbose_name="Antecedentes")
     surgeries = models.TextField(

@@ -5,8 +5,8 @@
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-3xl font-bold text-gray-800">Pacientes</h1>
       <a
-        href="#"
-        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
+        href="{% url 'create_patient' %}"
+        class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
       >
         + Nuevo Paciente
       </a>
@@ -46,7 +46,7 @@
         </thead>
 
         <tbody class="divide-y divide-gray-200">
-          {% for patient in patients %}
+          {% for patient in patient %}
           <tr class="hover:bg-gray-50 transition">
             <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-800">
               {{ patient.full_name }}
@@ -57,14 +57,14 @@
 
             <td class="px-6 py-4 flex gap-2 text-sm">
               <a
-                href="#"
+                href="{% url 'detail_view' patient.id %}"
                 class="text-blue-600 hover:text-blue-800 font-medium"
               >
                 Ver
               </a>
               <span>|</span>
               <a
-                href="#"
+                href="{% url 'update_patient' patient.id%}"
                 class="text-yellow-600 hover:text-yellow-800 font-medium"
               >
                 Editar

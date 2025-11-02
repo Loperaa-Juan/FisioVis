@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% block content %}
+
+<div class="max-w-lg mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
+  <h2 class="text-2xl font-bold text-red-600 mb-4">Eliminar Paciente</h2>
+  
+  <p class="text-gray-700 mb-6">
+    ¿Estás seguro de que deseas eliminar al paciente 
+    <span class="font-semibold text-gray-900">{{ patient.full_name }}</span>?
+    Esta acción no se puede deshacer.
+  </p>
+
+  <form method="POST" class="space-y-4">
+    {% csrf_token %}
+    
+    <button 
+      type="submit"
+      class="w-full bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition-all">
+      Eliminar definitivamente
+    </button>
+
+    <a 
+      href="{% url 'patient_list' %}" 
+      class="block text-center bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-300 transition-all">
+      Cancelar
+    </a>
+  </form>
+</div>
+
+{% endblock content %}

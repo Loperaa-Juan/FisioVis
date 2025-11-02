@@ -69,6 +69,13 @@
               >
                 Editar
               </a>
+              <span>|</span>
+              <a
+                href="{% url 'delete_patient' patient.id%}"
+                class="text-red-600 hover:text-yellow-800 font-medium"
+              >
+                Eliminar
+              </a>
             </td>
           </tr>
 

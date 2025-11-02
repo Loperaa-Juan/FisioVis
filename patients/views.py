@@ -34,10 +34,11 @@ def patient_detail_view(request, id):
     patient = get_object_or_404(Patient, id=id)
     return render(request, "patients/patient_details.html", {"patient": patient})
 
+
 @login_required
 def update_patient_view(request, id):
     patient = get_object_or_404(Patient, id=id)
-    
+
     if request.method == "POST":
         form = PatientForm(request.POST, instance=patient)
         if form.is_valid():
@@ -45,5 +46,15 @@ def update_patient_view(request, id):
             return redirect("patient_list")
     else:
         form = PatientForm(instance=patient)
-    
+
     return render(request, "patients/edit_patient.html", {"form": form})
+
+
+def delete_patient_view(request, id):
+    patient = get_object_or_404(Patient, id=id)
+
+    if request.method == "POST":
+        patient.delete()
+        return redirect("patient_list")
+
+    return render(request, "patients/delete_patient.html", {"patient": patient})

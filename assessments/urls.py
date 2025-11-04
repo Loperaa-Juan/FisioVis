@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import AssessmentsListView
+from .views import AssessmentView, assessment_list_view
 
 urlpatterns = [
-    path('list', AssessmentsListView.as_view(), name='list_assessments')
+    path("list/<uuid:id>", assessment_list_view, name="list_assessments"),
+    path("evaluate", AssessmentView.as_view(), name="evaluate"),
 ]

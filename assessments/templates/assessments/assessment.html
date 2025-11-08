@@ -30,6 +30,11 @@
       <p id="output-text" class="text-gray-700"></p>
     </div>
 
+    <div
+      id="result-image"
+      class="bg-white p-6 rounded-xl shadow-md border border-gray-200 h-48 overflow-auto"
+    >
+    </div>
     <!-- Botón -->
     <button
       id="evaluate-btn"
@@ -41,26 +46,32 @@
 </div>
 
 <script>
-  document.getElementById("evaluate-btn").addEventListener("click", async () => {
-    const result = document.getElementById("result");
-    result.innerText = "Procesando imagen...";
+  document
+    .getElementById("evaluate-btn")
+    .addEventListener("click", async () => {
+      const result = document.getElementById("result");
+      const result_image = document.getElementById("result-image");
+      result.innerText = "Procesando imagen...";
 
-    try {
-      const response = await fetch("{% url 'evaluate_moves' %}", {
-        method: "POST",
-        headers: { "X-CSRFToken": "{{ csrf_token }}" },
-      });
+      try {
+        const response = await fetch("{% url 'evaluate_moves' %}", {
+          method: "POST",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+        });
 
-      const data = await response.json();
-      if (data.analysis) {
-        result.innerText = "🧠 Análisis: " + data.analysis;
-      } else {
-        result.innerText = "⚠️ Error: " + (data.error || "Desconocido");
+        const data = await response.json();
+        if (data.image) {
+          result_image.innerHTML = `<img src="data:image/jpeg;base64,${data.image}" alt="Foto" width="200">`;
+        }
+        if (data.analysis) {
+          result.innerText = "🧠 Análisis: " + data.analysis;
+        } else {
+          result.innerText = "⚠️ Error: " + (data.error || "Desconocido");
+        }
+      } catch (err) {
+        result.innerText = "❌ Falló la conexión con el servidor.";
+        console.log(err);
       }
-    } catch (err) {
-      result.innerText = "❌ Falló la conexión con el servidor.";
-      console.log(err);
-    }
-  });
+    });
 </script>
 {% endblock content %}

@@ -31,17 +31,13 @@ def evaluate(request):
 
         img_bytes = esp_response.content
 
-       
         np_img = np.frombuffer(img_bytes, np.uint8)
         frame = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        resized = cv2.resize(gray, (224, 224))  
+        resized = cv2.resize(frame, (224, 224))
 
-      
         _, buffer = cv2.imencode(".jpg", resized)
         image_base64 = base64.b64encode(buffer).decode("utf-8")
 
-        
         response = client.chat.completions.create(
             model="gpt-5",
             messages=[
@@ -68,7 +64,7 @@ def evaluate(request):
         )
 
         result = response.choices[0].message.content
-        return JsonResponse({"analysis": result})
+        return JsonResponse({"image": image_base64, "analysis": result})
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)

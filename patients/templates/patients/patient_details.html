@@ -61,13 +61,20 @@
       <dd class="text-gray-700 sm:col-span-2">{{patient.medications}}</dd>
     </div>
 
-    <div class='flex items-center justify-center mb-8 py-6'>
+    <div class='flex items-center justify-center mb-8 py-6 space-x-6'>
         <a
           href="{% url 'patient_list' %}"
           class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
         >
           Volver
         </a>
+        <form action="{% url 'list_assessments' patient.id%}">
+          <button
+            class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
+          >
+            Hacer Evaluación
+          </button>
+        </form>
     </div>
   </dl>
 </div>

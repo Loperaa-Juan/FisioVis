@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="py-16">
+  <div class="max-w-5xl mx-auto text-center">
+    <h1 class="text-4xl font-bold text-teal-600 mb-4">Sobre FisioVis</h1>
+    <p class="text-gray-600 text-lg leading-relaxed mb-10">
+      FisioVis es una plataforma inteligente diseñada para apoyar a los profesionales de la salud 
+      en el análisis visual de la rehabilitación física. Combinamos <span class="text-teal-600 font-semibold">visión computacional</span> 
+      e <span class="text-teal-600 font-semibold">inteligencia artificial</span> para ofrecer una herramienta moderna que potencia 
+      la precisión, el seguimiento y la toma de decisiones clínicas.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6">
+    <!-- Misión -->
+    <div class="bg-white rounded-2xl shadow-md p-8 hover:shadow-lg transition">
+      <h2 class="text-2xl font-semibold text-teal-600 mb-3">Nuestra Misión</h2>
+      <p class="text-gray-600 leading-relaxed">
+        Brindar a los fisioterapeutas herramientas basadas en inteligencia artificial que les permitan
+        analizar el progreso de sus pacientes mediante imágenes y datos, reduciendo errores subjetivos
+        y optimizando los tratamientos de recuperación.
+      </p>
+    </div>
+
+    <!-- Visión -->
+    <div class="bg-white rounded-2xl shadow-md p-8 hover:shadow-lg transition">
+      <h2 class="text-2xl font-semibold text-teal-600 mb-3">Nuestra Visión</h2>
+      <p class="text-gray-600 leading-relaxed">
+        Convertirnos en la plataforma de referencia para la evaluación biomecánica asistida por IA,
+        ayudando a transformar la fisioterapia tradicional en una práctica más precisa, accesible y tecnológica.
+      </p>
+    </div>
+  </div>
+
+  <!-- Equipo -->
+  <div class="max-w-6xl mx-auto mt-16 px-6">
+    <h2 class="text-3xl font-semibold text-center text-teal-600 mb-8">Sobre el creador</h2>
+
+    <a href="https://www.linkedin.com/in/juan-jos%C3%A9-lopera-londo%C3%B1o-55933b270/">
+      <div class="max-w-6xl mx-auto mt-16 px-6">
+        <div class="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition">
+          <img
+            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+            src="{% static 'FisioVis/images/creator.jpg' %}"
+            alt="Juan José"
+          />
+          <h3 class="text-lg font-semibold text-gray-800">Juan José Lopera Londoño</h3>
+          <p class="text-sm text-gray-500 mb-2">Fundador & Futuro AI Engineer</p>
+          <p class="text-gray-600 text-sm">
+            Estudiante de Ingeniería Informática y apasionado por el desarrollo de soluciones basadas en inteligencia artificial.
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+{% endblock content %}

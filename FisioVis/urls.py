@@ -15,15 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from FisioVis.views import LandingView
+from FisioVis.views import AboutView, LandingView
 
 urlpatterns = [
     path("", LandingView.as_view(), name="landing"),
-    # path("login", LoginView.as_view(), name="login"),
+    path("about", AboutView.as_view(), name="about"),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
     path("patients/", include("patients.urls")),
-]
+    path("assessments/", include("assessments.urls")),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

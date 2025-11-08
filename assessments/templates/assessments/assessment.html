@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% load tailwind_filters %} {% block content %}
+
+<div class="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto py-10">
+  <!-- Contenedor del video -->
+  <div class="flex-1">
+    <div
+      class="bg-black rounded-xl overflow-hidden shadow-lg border border-gray-200"
+    >
+      <img
+        src="http://192.168.1.8:81/stream"
+        alt="ESP32 Stream"
+        className="rounded-2xl border-4 border-emerald-500 max-w-full"
+      />
+    </div>
+
+    <p class="text-sm text-gray-500 mt-2">
+      *Video procesado en tiempo real con MediaPipe
+    </p>
+  </div>
+
+  <!-- Panel derecho -->
+  <div class="flex-1 flex flex-col gap-6">
+    <!-- Texto generado -->
+
+    <div
+      id="result"
+      class="bg-white p-6 rounded-xl shadow-md border border-gray-200 h-48 overflow-auto"
+    >
+      <h2 class="text-xl font-semibold text-gray-800 mb-2">Resultados</h2>
+      <p id="output-text" class="text-gray-700"></p>
+    </div>
+
+    <!-- Botón -->
+    <button
+      id="evaluate-btn"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md"
+    >
+      Evaluar Movimiento
+    </button>
+  </div>
+</div>
+
+<script>
+  document.getElementById("evaluate-btn").addEventListener("click", async () => {
+    const result = document.getElementById("result");
+    result.innerText = "Procesando imagen...";
+
+    try {
+      const response = await fetch("{% url 'evaluate_moves' %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+      });
+
+      const data = await response.json();
+      if (data.analysis) {
+        result.innerText = "🧠 Análisis: " + data.analysis;
+      } else {
+        result.innerText = "⚠️ Error: " + (data.error || "Desconocido");
+      }
+    } catch (err) {
+      result.innerText = "❌ Falló la conexión con el servidor.";
+      console.log(err);
+    }
+  });
+</script>
+{% endblock content %}

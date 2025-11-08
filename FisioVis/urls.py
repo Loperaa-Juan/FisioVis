@@ -20,11 +20,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from FisioVis.views import LandingView
+from FisioVis.views import AboutView, LandingView
 
 urlpatterns = [
     path("", LandingView.as_view(), name="landing"),
-    # path("login", LoginView.as_view(), name="login"),
+    path("about", AboutView.as_view(), name="about"),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
     path("patients/", include("patients.urls")),

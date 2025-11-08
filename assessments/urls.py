@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views import AssessmentView, assessment_list_view
+from .views import AssessmentView, assessment_list_view, evaluate
 
 urlpatterns = [
     path("list/<uuid:id>", assessment_list_view, name="list_assessments"),
     path("evaluate", AssessmentView.as_view(), name="evaluate"),
+    path("eval", evaluate, name="evaluate_moves"),
 ]

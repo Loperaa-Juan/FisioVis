@@ -25,10 +25,10 @@ class PatientAssessment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    angle = models.FloatField()
+    angle = models.IntegerField()
     photo = models.ImageField(null=True, blank=True, verbose_name="foto")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)

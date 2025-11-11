@@ -57,23 +57,36 @@
         <p id="output-text" class="text-gray-700"></p>
       </div>
       <!-- Botón -->
-      <button
-        id="evaluate-btn"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md"
-      >
-        Evaluar Movimiento
-      </button>
+      <div id="eval-container" class="flex justify-center">
+        <button
+          id="evaluate-btn"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
+        >
+          Evaluar Movimiento
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  function base64ToFile(base64, filename) {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+  }
+
   document
     .getElementById("evaluate-btn")
     .addEventListener("click", async () => {
       const result = document.getElementById("output-text");
       const examType = document.getElementById("exam-type").value;
-      console.log(examType);
+      const button = document.getElementById("eval-container");
 
       if (!examType) {
         result.innerText = "⚠️ Por favor selecciona un tipo de examen.";
@@ -98,6 +111,7 @@
           result.innerHTML = `
           <div class="flex flex-col items-center">
             <img
+              id="result-image"
               src="data:image/jpeg;base64,${data.image}"
               alt="ESP32 Stream"
               class="rounded-2xl border-4 border-emerald-500 w-48 h-48 object-cover mx-auto"
@@ -106,11 +120,52 @@
             <h2 class="text-black font-semibold">Grados: ${data.angle}</h2>
           </div>        
         `;
+          button.innerHTML = `
+        <div class="flex items-center gap-x-6">
+          <button
+            id="evaluate-btn"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
+          >
+            Repetir Evaluación
+          </button>
+        
+          <button
+            id="save-assessment-btn"
+            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
+          >
+            Guardar Evaluación
+          </button>
+        </div>
+        `;
+          window.ANGLE = data.angle;
         }
       } catch (err) {
         result.innerText = "❌ Falló la conexión con el servidor.";
         console.error(err);
       }
+      save_btn = document.getElementById("save-assessment-btn");
+      const patientId = "{{patient.id}}";
+
+      save_btn.addEventListener("click", async () => {
+        const imgElement = document.getElementById("result-image");
+        const base64 = imgElement.src;
+
+        const file = base64ToFile(base64, "evaluacion.jpg");
+
+        const formData = new FormData();
+        formData.append("patient_id", patientId);
+        formData.append("assessment", examType);
+        formData.append("angle", ANGLE);
+        formData.append("image", file);
+
+        const response = await fetch("{% url 'save-assessment' %}", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        console.log("Respuesta del backend:", data);
+      });
     });
 </script>
 

@@ -18,7 +18,6 @@ class Assessment(models.Model):
         max_length=500, null=True, verbose_name="descripción"
     )
     movement_type = models.CharField(max_length=20, choices=MOVEMENT_TYPES)
-    photo = models.ImageField(null=True, blank=True, verbose_name="foto")
 
 
 class PatientAssessment(models.Model):
@@ -27,7 +26,7 @@ class PatientAssessment(models.Model):
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     angle = models.FloatField()
-    ai_observation = models.TextField(null=True, blank=True)
+    photo = models.ImageField(null=True, blank=True, verbose_name="foto")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -1,47 +1,70 @@
 {% extends 'base.html' %} {% load tailwind_filters %} {% block content %}
 
-<div class="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto py-10">
-  <!-- Contenedor del video -->
-  <div class="flex-1">
-    <div
-      class="bg-black rounded-xl overflow-hidden shadow-lg border border-gray-200"
-    >
-      <img
-        src="http://192.168.1.8:81/stream"
-        alt="ESP32 Stream"
-        className="rounded-2xl border-4 border-emerald-500 max-w-full"
-      />
+<div class="max-w-5xl mx-auto">
+  <div
+    class="bg-white shadow-sm border border-gray-200 rounded-xl p-4 w-full md:w-2/3 mx-auto mt-6"
+  >
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-teal-700">
+          Evaluando a {{ patient.full_name }}
+        </h2>
+        <p class="text-gray-700 text-sm mt-1">
+          <strong>Edad:</strong> {{ patient.age }} años &nbsp;|&nbsp;
+          <strong>Género:</strong> {{ patient.sex }} &nbsp;|&nbsp;
+          <strong>ID:</strong> {{ patient.id }}
+        </p>
+      </div>
     </div>
-
-    <p class="text-sm text-gray-500 mt-2">
-      *Video procesado en tiempo real con MediaPipe
-    </p>
   </div>
-
-  <!-- Panel derecho -->
-  <div class="flex-1 flex flex-col gap-6">
-    <!-- Texto generado -->
-
-    <div
-      id="result"
-      class="bg-white p-6 rounded-xl shadow-md border border-gray-200 h-48 overflow-auto"
-    >
-      <h2 class="text-xl font-semibold text-gray-800 mb-2">Resultados</h2>
-      <p id="output-text" class="text-gray-700"></p>
+  <!-- Contenedor del video -->
+  <div class="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto py-10">
+    <div class="flex-1">
+      <div
+        class="bg-black rounded-xl overflow-hidden shadow-lg border border-gray-200"
+      >
+        <img
+          src="http://192.168.1.9:81/stream"
+          alt="ESP32 Stream"
+          class="rounded-2xl border-4 border-emerald-500 max-w-full"
+        />
+      </div>
     </div>
-
-    <div
-      id="result-image"
-      class="bg-white p-6 rounded-xl shadow-md border border-gray-200 h-48 overflow-auto"
-    >
+    <!-- Panel derecho -->
+    <div class="flex-1 flex flex-col gap-6">
+      <!-- Selector de tipo de examen -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <label for="exam-type" class="block text-gray-800 font-semibold mb-2">
+          Tipo de examen
+        </label>
+        <select
+          id="exam-type"
+          class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">Selecciona un examen...</option>
+          
+          {% for assessment in assessments %}
+            <option value="{{assessment.name}}">{{assessment.name}}</option>
+          {% endfor %}
+            
+        </select>
+      </div>
+      <!-- Resultados -->
+      <div
+        id="result"
+        class="bg-white p-6 rounded-xl shadow-md border border-gray-200 overflow-auto"
+      >
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">Resultados</h2>
+        <p id="output-text" class="text-gray-700"></p>
+      </div>
+      <!-- Botón -->
+      <button
+        id="evaluate-btn"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md"
+      >
+        Evaluar Movimiento
+      </button>
     </div>
-    <!-- Botón -->
-    <button
-      id="evaluate-btn"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md"
-    >
-      Evaluar Movimiento
-    </button>
   </div>
 </div>
 
@@ -49,29 +72,43 @@
   document
     .getElementById("evaluate-btn")
     .addEventListener("click", async () => {
-      const result = document.getElementById("result");
-      const result_image = document.getElementById("result-image");
+      const result = document.getElementById("output-text");
+      const examType = document.getElementById("exam-type").value;
+      console.log(examType)
+
+      if (!examType) {
+        result.innerText = "⚠️ Por favor selecciona un tipo de examen.";
+        return;
+      }
+
       result.innerText = "Procesando imagen...";
 
       try {
         const response = await fetch("{% url 'evaluate_moves' %}", {
           method: "POST",
-          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({ exam_type: examType }),
         });
 
         const data = await response.json();
-        if (data.image) {
-          result_image.innerHTML = `<img src="data:image/jpeg;base64,${data.image}" alt="Foto" width="200">`;
+
+        if(data.image){
+          result.innerHTML = `<img
+          src="data:image/jpeg;base64,${data.image}"
+          alt="ESP32 Stream"
+          class="rounded-2xl border-4 border-emerald-500 max-w-full"
+        />`
         }
-        if (data.analysis) {
-          result.innerText = "🧠 Análisis: " + data.analysis;
-        } else {
-          result.innerText = "⚠️ Error: " + (data.error || "Desconocido");
-        }
+
+      
       } catch (err) {
         result.innerText = "❌ Falló la conexión con el servidor.";
-        console.log(err);
+        console.error(err);
       }
     });
 </script>
+
 {% endblock content %}

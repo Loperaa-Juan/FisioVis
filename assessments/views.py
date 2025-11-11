@@ -5,11 +5,13 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import requests
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
 from patients.models import Patient
 
-from .models import Assessment
+from .models import Assessment, PatientAssessment
 
 ESP32_URL = "http://192.168.1.9/capture"
 
@@ -135,6 +137,7 @@ def evaluate(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+@login_required
 def assessment_view(request, id):
     patient = Patient.objects.get(id=id)
     assesments = Assessment.objects.get_queryset()
@@ -143,3 +146,28 @@ def assessment_view(request, id):
         "assessments/assessment.html",
         {"patient": patient, "assessments": assesments},
     )
+
+
+@csrf_exempt
+def save_assessment(request):
+    if request.method == "POST":
+        patient_id = request.POST.get("patient_id")
+        assessment_name = request.POST.get("assessment")
+        angle = request.POST.get("angle")
+        image = request.FILES.get("image")
+
+        if not image:
+            return JsonResponse({"error": "No se envió ninguna imagen"}, status=400)
+
+        patient = get_object_or_404(Patient, id=patient_id)
+        assesment = get_object_or_404(Assessment, name=assessment_name)
+
+        assessment = PatientAssessment.objects.create(
+            patient=patient, assessment=assesment, angle=angle, photo=image
+        )
+        return JsonResponse(
+            {
+                "message": "Imagen guardada correctamente",
+                "image_url": assessment.photo.url,
+            }
+        )

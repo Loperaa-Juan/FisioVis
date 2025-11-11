@@ -42,11 +42,10 @@
           class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">Selecciona un examen...</option>
-          
+
           {% for assessment in assessments %}
-            <option value="{{assessment.name}}">{{assessment.name}}</option>
+          <option value="{{assessment.name}}">{{assessment.name}}</option>
           {% endfor %}
-            
         </select>
       </div>
       <!-- Resultados -->
@@ -74,7 +73,7 @@
     .addEventListener("click", async () => {
       const result = document.getElementById("output-text");
       const examType = document.getElementById("exam-type").value;
-      console.log(examType)
+      console.log(examType);
 
       if (!examType) {
         result.innerText = "⚠️ Por favor selecciona un tipo de examen.";
@@ -95,15 +94,19 @@
 
         const data = await response.json();
 
-        if(data.image){
-          result.innerHTML = `<img
-          src="data:image/jpeg;base64,${data.image}"
-          alt="ESP32 Stream"
-          class="rounded-2xl border-4 border-emerald-500 max-w-full"
-        />`
-        }
+        if (data.image) {
+          result.innerHTML = `
+          <div class="flex flex-col items-center">
+            <img
+              src="data:image/jpeg;base64,${data.image}"
+              alt="ESP32 Stream"
+              class="rounded-2xl border-4 border-emerald-500 w-48 h-48 object-cover mx-auto"
+            />
 
-      
+            <h2 class="text-black font-semibold">Grados: ${data.angle}</h2>
+          </div>        
+        `;
+        }
       } catch (err) {
         result.innerText = "❌ Falló la conexión con el servidor.";
         console.error(err);

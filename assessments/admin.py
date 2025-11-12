@@ -15,7 +15,7 @@ admin.site.register(Assessment, AssessmentAdmin)
 
 class PatientAssessmentAdmin(admin.ModelAdmin):
     model = PatientAssessment
-    list_display = ["patient", "date", "angle"]
+    list_display = ["patient", "date", "angle", "assessment"]
     search_fields = ["date"]
 
 

@@ -19,6 +19,9 @@ class Assessment(models.Model):
     )
     movement_type = models.CharField(max_length=20, choices=MOVEMENT_TYPES)
 
+    def __str__(self):
+        return self.name
+
 
 class PatientAssessment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

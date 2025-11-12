@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "crispy_tailwind",
     "patients",
     "assessments",
+    "reports",
 ]
 
 MIDDLEWARE = [

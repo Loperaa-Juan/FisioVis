@@ -142,18 +142,18 @@
     }
   }
 
-  // ✅ Escucha eventos a nivel del contenedor
+
   document
     .getElementById("eval-container")
     .addEventListener("click", async (event) => {
       const target = event.target;
 
-      // Si clic en "Evaluar Movimiento" o "Repetir Evaluación"
+      
       if (target.id === "evaluate-btn") {
         await evaluateMovement();
       }
 
-      // Si clic en "Guardar Evaluación"
+ 
       if (target.id === "save-assessment-btn") {
         const patientId = "{{patient.id}}";
         const examType = document.getElementById("exam-type").value;

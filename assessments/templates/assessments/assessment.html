@@ -76,39 +76,36 @@
     const bstr = atob(arr[1]);
     let n = bstr.length;
     const u8arr = new Uint8Array(n);
-
     while (n--) u8arr[n] = bstr.charCodeAt(n);
     return new File([u8arr], filename, { type: mime });
   }
 
-  document
-    .getElementById("evaluate-btn")
-    .addEventListener("click", async () => {
-      const result = document.getElementById("output-text");
-      const examType = document.getElementById("exam-type").value;
-      const button = document.getElementById("eval-container");
+  async function evaluateMovement() {
+    const result = document.getElementById("output-text");
+    const examType = document.getElementById("exam-type").value;
+    const button = document.getElementById("eval-container");
 
-      if (!examType) {
-        result.innerText = "⚠️ Por favor selecciona un tipo de examen.";
-        return;
-      }
+    if (!examType) {
+      result.innerText = "⚠️ Por favor selecciona un tipo de examen.";
+      return;
+    }
 
-      result.innerText = "Procesando imagen...";
+    result.innerText = "Procesando imagen...";
 
-      try {
-        const response = await fetch("{% url 'evaluate_moves' %}", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
-          body: JSON.stringify({ exam_type: examType }),
-        });
+    try {
+      const response = await fetch("{% url 'evaluate_moves' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ exam_type: examType }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.image) {
-          result.innerHTML = `
+      if (data.image) {
+        result.innerHTML = `
           <div class="flex flex-col items-center">
             <img
               id="result-image"
@@ -116,40 +113,54 @@
               alt="ESP32 Stream"
               class="rounded-2xl border-4 border-emerald-500 w-48 h-48 object-cover mx-auto"
             />
-
             <h2 class="text-black font-semibold">Grados: ${data.angle}</h2>
           </div>        
         `;
-          button.innerHTML = `
-        <div class="flex items-center gap-x-6">
-          <button
-            id="evaluate-btn"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
-          >
-            Repetir Evaluación
-          </button>
-        
-          <button
-            id="save-assessment-btn"
-            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
-          >
-            Guardar Evaluación
-          </button>
-        </div>
+
+        button.innerHTML = `
+          <div class="flex items-center gap-x-6">
+            <button
+              id="evaluate-btn"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
+            >
+              Repetir Evaluación
+            </button>
+            <button
+              id="save-assessment-btn"
+              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-all shadow-md px-4"
+            >
+              Guardar Evaluación
+            </button>
+          </div>
         `;
-          window.ANGLE = data.angle;
-        }
-      } catch (err) {
-        result.innerText = "❌ Falló la conexión con el servidor.";
-        console.error(err);
+
+        window.ANGLE = data.angle;
       }
-      save_btn = document.getElementById("save-assessment-btn");
-      const patientId = "{{patient.id}}";
+    } catch (err) {
+      result.innerText = "❌ Falló la conexión con el servidor.";
+      console.error(err);
+    }
+  }
 
-      save_btn.addEventListener("click", async () => {
+  // ✅ Escucha eventos a nivel del contenedor
+  document
+    .getElementById("eval-container")
+    .addEventListener("click", async (event) => {
+      const target = event.target;
+
+      // Si clic en "Evaluar Movimiento" o "Repetir Evaluación"
+      if (target.id === "evaluate-btn") {
+        await evaluateMovement();
+      }
+
+      // Si clic en "Guardar Evaluación"
+      if (target.id === "save-assessment-btn") {
+        const patientId = "{{patient.id}}";
+        const examType = document.getElementById("exam-type").value;
         const imgElement = document.getElementById("result-image");
-        const base64 = imgElement.src;
+        if (!imgElement) return;
 
+        const base64 = imgElement.src;
         const file = base64ToFile(base64, "evaluacion.jpg");
 
         const formData = new FormData();
@@ -158,14 +169,18 @@
         formData.append("angle", ANGLE);
         formData.append("image", file);
 
-        const response = await fetch("{% url 'save-assessment' %}", {
-          method: "POST",
-          body: formData,
-        });
+        try {
+          const response = await fetch("{% url 'save-assessment' %}", {
+            method: "POST",
+            body: formData,
+          });
 
-        const data = await response.json();
-        console.log("Respuesta del backend:", data);
-      });
+          const data = await response.json();
+          console.log("✅ Imagen guardada:", data);
+        } catch (err) {
+          console.error("❌ Error al guardar la evaluación:", err);
+        }
+      }
     });
 </script>
 

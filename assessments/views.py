@@ -13,7 +13,7 @@ from patients.models import Patient
 
 from .models import Assessment, PatientAssessment
 
-ESP32_URL = "http://192.168.1.9/capture"
+ESP32_URL = "http://10.201.194.31/capture"
 
 
 def calculate_angle(a, b, c):

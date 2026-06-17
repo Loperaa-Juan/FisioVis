@@ -19,14 +19,16 @@ class PatientListView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def create_patient(request):
-    if request.method == "GET":
-        return render(request, "patients/create_patient.html", {"form": PatientForm})
+    if request.method == "POST":
+        form = PatientForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_patient = form.save(commit=False)
+            new_patient.user = request.user
+            new_patient.save()
+            return redirect("patient_list")
     else:
-        form = PatientForm(request.POST)
-        new_patient = form.save(commit=False)
-        new_patient.user = request.user
-        new_patient.save()
-        return redirect("patient_list")
+        form = PatientForm()
+    return render(request, "patients/create_patient.html", {"form": form})
 
 
 @login_required
@@ -40,7 +42,7 @@ def update_patient_view(request, id):
     patient = get_object_or_404(Patient, id=id)
 
     if request.method == "POST":
-        form = PatientForm(request.POST, instance=patient)
+        form = PatientForm(request.POST, request.FILES, instance=patient)
         if form.is_valid():
             form.save()
             return redirect("patient_list")

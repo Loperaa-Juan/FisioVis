@@ -30,6 +30,7 @@ class Patient(models.Model):
     medications = models.TextField(
         max_length=500, blank=True, null=True, verbose_name="Medicamentos"
     )
+    photo = models.ImageField(upload_to="patients/photos/", null=True, blank=True, verbose_name="Foto")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
